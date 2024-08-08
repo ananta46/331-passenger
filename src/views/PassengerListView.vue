@@ -27,7 +27,6 @@ const hasNextPage = computed(() => {
 
 onMounted(() => {
   watchEffect(() => {
-    passengers.value = null
     //PassengerService.getPassengers(maxPassenger.value, page.value)
     PassengerService.getPassengers(3, 1)
       .then((response) => {

@@ -3,9 +3,11 @@ import PassengerListView from '@/views/PassengerListView.vue'
 import PassengerLayoutView from '@/views/passenger/LayoutView.vue'
 import PassengerDetailView from '@/views/passenger/DetailView.vue'
 import AirlineView from '@/views/passenger/AirlineView.vue'
-
+import nProgress from 'nprogress'
 import NotFoundView from '@/views/NotFoundView.vue'
 import NetworkErrorView from '@/views/NetworkErrorView.vue'
+import PassengerService from '@/services/PassengerService'
+import { usePassengerStore } from '@/stores/passenger'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,24 @@ const router = createRouter({
       name: 'passenger-layout-view',
       component: PassengerLayoutView,
       props: true,
+      beforeEnter: (to) => {
+        const id = to.params.id as string
+        const passengerStore = usePassengerStore()
+        return PassengerService.getPassenger(id)
+          .then((response) => {
+            passengerStore.setPassenger(response.data)
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 404) {
+              return {
+                name: '404-resource-view',
+                params: { resource: 'passenger' }
+              }
+            } else {
+              return { name: 'network-error-view' }
+            }
+          })
+      },
       children: [
         {
           path: '',
@@ -62,7 +82,19 @@ const router = createRouter({
       name: 'network-error-view',
       component: NetworkErrorView
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
 })
-
+router.beforeEach(() => {
+  nProgress.start()
+})
+router.afterEach(() => {
+  nProgress.done()
+})
 export default router
