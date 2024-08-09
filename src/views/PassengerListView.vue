@@ -14,6 +14,7 @@ const props = defineProps({
     required: true
   }
 })
+
 console.log('props:', props)
 
 const passengers = ref<Passenger[] | null>(null)
@@ -27,8 +28,8 @@ const hasNextPage = computed(() => {
 
 onMounted(() => {
   watchEffect(() => {
-    //PassengerService.getPassengers(maxPassenger.value, page.value)
-    PassengerService.getPassengers(3, 1)
+    PassengerService.getPassengers(maxPassenger.value, page.value)
+      //PassengerService.getPassengers(3, 1)
       .then((response) => {
         // console.log(response.data)
         passengers.value = response.data.data

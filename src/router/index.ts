@@ -17,10 +17,8 @@ const router = createRouter({
       name: 'passenger-list-view',
       component: PassengerListView,
       props: (route) => ({
-        // size: parseInt(route.query.size?.toString() || '2'),
-        // page: parseInt(route.query.page?.toString() || '1')
-        size: parseInt('2'),
-        page: parseInt('1')
+        size: parseInt(route.query.size?.toString() || '2'),
+        page: parseInt(route.query.page?.toString() || '1')
       })
     },
     {
@@ -60,11 +58,6 @@ const router = createRouter({
           props: true
         }
       ]
-    },
-    {
-      path: '/',
-      name: 'passenger-list-view',
-      component: PassengerListView
     },
     {
       path: '/404/:resource',
